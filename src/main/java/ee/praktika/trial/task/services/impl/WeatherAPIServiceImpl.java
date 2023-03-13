@@ -22,7 +22,7 @@ public class WeatherAPIServiceImpl {
         Observations observations = (Observations) un.unmarshal(new URL(LINK));
 
         System.out.println(observations.getTimestamp());
-        System.out.println(observations.getStation());
+        System.out.println(observations.getStations());
 
         return null;
     }
