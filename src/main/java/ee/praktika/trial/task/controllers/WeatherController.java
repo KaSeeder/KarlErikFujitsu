@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.xml.bind.JAXBException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -28,8 +30,8 @@ public class WeatherController {
 
 
     @GetMapping
-    public ResponseEntity<List<Weather>> getWeather(@RequestParam(name="city") String city,
-                                                    @RequestParam(name="vehicle") String vehicle){
+    public ResponseEntity<List<Weather>> getWeather(@RequestParam(name = "city") String city,
+                                                    @RequestParam(name = "vehicle") String vehicle) throws MalformedURLException, JAXBException {
         WeatherAPIServiceImpl.getObservations();
         return new ResponseEntity<>(
                 weatherService.readWeather(city, vehicle),
@@ -37,7 +39,7 @@ public class WeatherController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Weather> getSpecificWeather(@PathVariable Long id){
+    public ResponseEntity<Weather> getSpecificWeather(@PathVariable Long id) {
         return new ResponseEntity<>(
                 weatherService.readSpecificWeather(id),
                 HttpStatus.OK);
@@ -63,7 +65,6 @@ public class WeatherController {
         return new ResponseEntity<>(
                 HttpStatus.NO_CONTENT);
     }
-
 
 
 }

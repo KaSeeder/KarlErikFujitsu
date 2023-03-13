@@ -1,33 +1,29 @@
 package ee.praktika.trial.task.models;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 @Data
-@RequiredArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "station")
 public class Station {
     private String name;
     private String wmocode;
-    private BigDecimal longitude;
-    private BigDecimal latitude;
+    private Float longitude;
+    private Float latitude;
     private String phenomenon;
-    private BigDecimal visibility;
+    private Float visibility;
     private Integer precipitations;
-    private BigDecimal airpressure;
+    private Float airpressure;
     private Integer relativehumidity;
-    private BigDecimal airtemperature;
+    private Float airtemperature;
     private Integer winddirection;
-    private BigDecimal windspeed;
-    private BigDecimal windspeedmax;
-    private BigDecimal waterlevel;
-    private BigDecimal waterlevel_eh2000;
-    private BigDecimal watertemperature;
-    private BigDecimal uvindex;
+    private Float windspeed;
+    private Float windspeedmax;
+    private Float waterlevel;
+    private Float waterlevel_eh2000;
+    private Float watertemperature;
+    private Float uvindex;
 
 }
