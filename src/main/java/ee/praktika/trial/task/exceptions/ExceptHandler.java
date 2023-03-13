@@ -13,4 +13,9 @@ public class ExceptHandler {
     protected ResponseEntity<?> handleEntityNotFoundException(Exception exception, WebRequest webRequest){
         return new ResponseEntity<>("Entity Not Found!", HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<?> handleVehicleIsForbiddenException(Exception exception, WebRequest webRequest){
+        return new ResponseEntity<>("Usage of selected vehicle type is forbidden", HttpStatus.NOT_FOUND);
+    }
 }

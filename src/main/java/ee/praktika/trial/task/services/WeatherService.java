@@ -1,6 +1,5 @@
 package ee.praktika.trial.task.services;
 
-import ee.praktika.trial.task.models.Observations;
 import ee.praktika.trial.task.models.Weather;
 
 import java.util.List;
