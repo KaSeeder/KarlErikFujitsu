@@ -1,0 +1,16 @@
+package ee.praktika.trial.task.exceptions;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+
+@RestControllerAdvice
+public class ExceptHandler {
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<?> handleEntityNotFoundException(Exception exception, WebRequest webRequest){
+        return new ResponseEntity<>("Entity Not Found!", HttpStatus.NOT_FOUND);
+    }
+}
