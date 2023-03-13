@@ -29,13 +29,12 @@ public class WeatherController {
 
     private final WeatherService weatherService;
 
-    @Autowired
     WeatherAPIServiceImpl weatherAPIService;
 
 
     @GetMapping
     public ResponseEntity<List<Weather>> getWeather(@RequestParam(name = "city") String city,
-                                                    @RequestParam(name = "vehicle") String vehicle) throws MalformedURLException, JAXBException {
+                                                    @RequestParam(name = "vehicle") String vehicle) {
         return new ResponseEntity<>(
                 weatherService.readWeather(city, vehicle),
                 HttpStatus.OK);

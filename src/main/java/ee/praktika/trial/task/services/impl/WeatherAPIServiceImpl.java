@@ -3,6 +3,7 @@ package ee.praktika.trial.task.services.impl;
 import ee.praktika.trial.task.models.Observations;
 import ee.praktika.trial.task.models.Weather;
 import ee.praktika.trial.task.repository.WeatherRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,10 @@ import java.util.Date;
  * New and updated version of Impl.
  */
 @Service
+@AllArgsConstructor
 public class WeatherAPIServiceImpl {
 
-    @Autowired
-    private WeatherRepository weatherRepository;
+    private final WeatherRepository weatherRepository;
 
     private final String LINK = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
 

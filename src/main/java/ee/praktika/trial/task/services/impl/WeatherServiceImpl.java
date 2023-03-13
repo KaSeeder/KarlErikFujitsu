@@ -17,10 +17,6 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public List<Weather> readWeather(String city, String vehicle) {
-        if (city != null && vehicle != null) {
-            //TODO: make 3 vehicle types CAR SCOOTER BIKE
-            return weatherRepository.findAllByName(city);
-        }
         return weatherRepository.findAll();
     }
 
