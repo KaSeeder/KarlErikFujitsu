@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "station")
 public class Station {
     private String name;
-    private String wmocode;
+    private Integer wmocode;
     private Float longitude;
     private Float latitude;
     private String phenomenon;

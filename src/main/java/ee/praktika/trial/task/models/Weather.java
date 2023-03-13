@@ -8,15 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 @Data
-@RequiredArgsConstructor
 @Table(name="weather")
+@NoArgsConstructor
 public class Weather {
 
     @Id
@@ -32,13 +31,19 @@ public class Weather {
     @Column(nullable = false)
     private String phenomenon;
 
-    @Column(nullable = false)
-    private BigDecimal airTemperature;
+    private Float airTemperature;
 
-    @Column(nullable = false)
-    private BigDecimal windSpeed;
+    private Float windSpeed;
 
     @Column(nullable = false)
     private Date time;
 
+    public Weather(Station station, Date time) {
+        this.name = station.getName();
+        this.wmocode = station.getWmocode();
+        this.phenomenon = station.getPhenomenon();
+        this.airTemperature = station.getAirtemperature();
+        this.windSpeed = station.getWindspeed();
+        this.time = time;
+    }
 }

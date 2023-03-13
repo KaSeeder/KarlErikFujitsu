@@ -5,6 +5,7 @@ import ee.praktika.trial.task.models.Weather;
 import ee.praktika.trial.task.services.WeatherService;
 import ee.praktika.trial.task.services.impl.WeatherAPIServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,11 +29,13 @@ public class WeatherController {
 
     private final WeatherService weatherService;
 
+    @Autowired
+    WeatherAPIServiceImpl weatherAPIService;
+
 
     @GetMapping
     public ResponseEntity<List<Weather>> getWeather(@RequestParam(name = "city") String city,
                                                     @RequestParam(name = "vehicle") String vehicle) throws MalformedURLException, JAXBException {
-        WeatherAPIServiceImpl.getObservations();
         return new ResponseEntity<>(
                 weatherService.readWeather(city, vehicle),
                 HttpStatus.OK);
@@ -46,7 +49,7 @@ public class WeatherController {
     }
 
     @PostMapping
-    public ResponseEntity<Weather> postHello(@RequestBody Weather weather) {
+    public ResponseEntity<Weather> postWeather (@RequestBody Weather weather) {
         return new ResponseEntity<>(
                 weatherService.createWeather(weather),
                 HttpStatus.CREATED);

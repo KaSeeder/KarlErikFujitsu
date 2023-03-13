@@ -3,6 +3,7 @@ package ee.praktika.trial.task.models;
 import lombok.Data;
 
 import javax.xml.bind.annotation.*;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -10,8 +11,8 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Observations {
 
-    @XmlAttribute
-    private String timestamp;
+    @XmlAttribute(name="timestamp")
+    private Date time;
 
     @XmlElement(name = "station")
     private List<Station> stations;
