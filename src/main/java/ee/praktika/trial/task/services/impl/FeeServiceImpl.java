@@ -44,22 +44,20 @@ public class FeeServiceImpl implements FeeService {
 
     // Variables
     private final WeatherRepository weatherRepository;
-    private final Fee fee;
-    private String cityToSearchBy;
 
 
     @Override
     public Fee calculateCost(String city, String vehicle) {
-        renameCity(city);
-        List<Weather> info = weatherRepository.findAllByName(cityToSearchBy);
+        Fee fee = new Fee();
+        List<Weather> info = weatherRepository.findAllByName(renameCity(city));
         info.sort(Comparator.comparing(Weather::getTime));
-        calculateFees(city, vehicle, info);
-        System.out.println(fee.getTotalCost());
+        calculateFees(city, vehicle, info, fee);
         return fee;
     }
 
     @Override
-    public void renameCity(String city) {
+    public String renameCity(String city) {
+        String cityToSearchBy = "";
         if (city.equals(TALLINN)) {
             cityToSearchBy = "Tallinn-Harku";
         }
@@ -69,10 +67,11 @@ public class FeeServiceImpl implements FeeService {
         if (city.equals(PARNU)) {
             cityToSearchBy = PARNU;
         }
+        return cityToSearchBy;
     }
 
     @Override
-    public void calculateFees(String city, String vehicle, List<Weather> info) {
+    public void calculateFees(String city, String vehicle, List<Weather> info, Fee fee) {
         if (vehicle.equals("Car")) {
             if (city.equals(TALLINN)) {
                 fee.setRbf(TALLINNCARCOST);
@@ -85,8 +84,8 @@ public class FeeServiceImpl implements FeeService {
             }
         }
         if (vehicle.equals("Scooter")) {
-            calculateAtef(info);
-            calculateWpef(info);
+            calculateAtef(info, fee);
+            calculateWpef(info, fee);
             if (city.equals(TALLINN)) {
                 fee.setRbf(TALLINNSCOOTERCOST);
             }
@@ -98,9 +97,9 @@ public class FeeServiceImpl implements FeeService {
             }
         }
         if (vehicle.equals("Bike")) {
-            calculateAtef(info);
-            calculateWsef(info);
-            calculateWpef(info);
+            calculateAtef(info, fee);
+            calculateWsef(info, fee);
+            calculateWpef(info, fee);
             if (city.equals(TALLINN)) {
                 fee.setRbf(TALLINNBIKECOST);
             }
@@ -115,8 +114,9 @@ public class FeeServiceImpl implements FeeService {
     }
 
     @Override
-    public void calculateAtef(List<Weather> info) {
+    public void calculateAtef(List<Weather> info, Fee fee) {
         float airTemp = info.get(0).getAirTemperature();
+        System.out.println(airTemp);
         if (airTemp != ISNULL) {
             if (airTemp < VERYCOLDAIRTEMPERATURE) {
                 fee.setAtef(VERYCOLDAIRTEMPERATURECOST);
@@ -127,8 +127,9 @@ public class FeeServiceImpl implements FeeService {
     }
 
     @Override
-    public void calculateWsef(List<Weather> info) {
+    public void calculateWsef(List<Weather> info, Fee fee) {
         float windSpeed = info.get(0).getWindSpeed();
+        System.out.println(windSpeed);
         if (windSpeed != ISNULL) {
             if (windSpeed >= HIGHWINDSPEEDMIN && windSpeed <= HIGHWINDSPEEDMAX) {
                 fee.setWsef(HIGHWINDSPEEDCOST);
@@ -139,12 +140,13 @@ public class FeeServiceImpl implements FeeService {
     }
 
     @Override
-    public void calculateWpef(List<Weather> info) {
+    public void calculateWpef(List<Weather> info, Fee fee) {
         List<String> listOfSnowAndSnowPhenomenons = new ArrayList<>(List.of("Light sleet", "Moderate sleet", "Light snowfall", "Moderate Snowfall",
                 "Heavy snowfall", "Blowing snow", "Drifting snow"));
         List<String> listOfRainPhenomenons = new ArrayList<>(List.of("Light shower", "Moderate shower", "Heavy shower", "Light rain", "Moderate rain", "Heavy rain"));
         List<String> listOfForbiddenPhenomenons = new ArrayList<>(List.of("Glaze", "Hail", "Thunder", "Thunderstorm"));
         String phenomenon = info.get(0).getPhenomenon();
+        System.out.println(phenomenon);
         if (listOfSnowAndSnowPhenomenons.contains(phenomenon)) {
             fee.setWpef(SNOWORSLEETWEATHERCOST);
         } else if (listOfRainPhenomenons.contains(phenomenon)) {

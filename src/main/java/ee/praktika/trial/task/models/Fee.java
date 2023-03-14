@@ -3,7 +3,6 @@ package ee.praktika.trial.task.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Bean;
 
 @Data
 @NoArgsConstructor
@@ -13,12 +12,16 @@ public class Fee {
     private double atef = 0;
     private double wsef = 0;
     private double wpef = 0;
-    private double totalCost = rbf+atef+wsef+wpef;
+    private double totalCost = 0;
 
+    public double getTotalCost() {
+        this.totalCost = rbf+atef+wsef+wpef;
+        return totalCost;
+    }
 
     @Override
     public String toString() {
-        return totalCost+"€";
+        return getTotalCost()+"€";
     }
 
 

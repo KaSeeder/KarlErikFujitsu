@@ -8,12 +8,12 @@ import java.util.List;
 public interface FeeService {
 
     public Fee calculateCost(String city, String vehicle);
-    public void renameCity(String city);
+    public String renameCity(String city);
 
-    public void calculateFees(String city, String vehicle, List<Weather> info);
-    public void calculateAtef(List<Weather> info);
-    public void calculateWsef(List<Weather> info);
-    public void calculateWpef(List<Weather> info);
+    public void calculateFees(String city, String vehicle, List<Weather> info, Fee fee);
+    public void calculateAtef(List<Weather> info, Fee fee);
+    public void calculateWsef(List<Weather> info, Fee fee);
+    public void calculateWpef(List<Weather> info, Fee fee);
 
 
 }

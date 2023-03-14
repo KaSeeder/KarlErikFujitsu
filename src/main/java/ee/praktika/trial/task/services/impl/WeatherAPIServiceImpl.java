@@ -4,7 +4,6 @@ import ee.praktika.trial.task.models.Observations;
 import ee.praktika.trial.task.models.Weather;
 import ee.praktika.trial.task.repository.WeatherRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ import javax.xml.bind.Unmarshaller;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-import java.util.logging.Logger;
 
 
 /**
@@ -28,7 +26,7 @@ public class WeatherAPIServiceImpl {
 
     private final String LINK = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
 
-    @Scheduled(cron="0 40 * ? * *")
+    @Scheduled(cron="0 15 * ? * *")
     public void getObservations() throws JAXBException, MalformedURLException {
         JAXBContext context = JAXBContext.newInstance(Observations.class);
         Unmarshaller un = context.createUnmarshaller();
