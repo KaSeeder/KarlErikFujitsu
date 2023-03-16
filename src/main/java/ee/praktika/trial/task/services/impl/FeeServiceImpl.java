@@ -1,6 +1,7 @@
 package ee.praktika.trial.task.services.impl;
 
 
+import ee.praktika.trial.task.exceptions.InvalidCityNameException;
 import ee.praktika.trial.task.exceptions.VehicleIsForbiddenException;
 import ee.praktika.trial.task.models.Fee;
 import ee.praktika.trial.task.models.Weather;
@@ -66,6 +67,9 @@ public class FeeServiceImpl implements FeeService {
         }
         if (city.equals(PARNU)) {
             cityToSearchBy = PARNU;
+        }
+        if (cityToSearchBy.equals("")) {
+            throw new InvalidCityNameException();
         }
         return cityToSearchBy;
     }

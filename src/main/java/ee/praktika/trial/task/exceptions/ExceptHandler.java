@@ -18,4 +18,9 @@ public class ExceptHandler {
     protected ResponseEntity<?> handleVehicleIsForbiddenException(Exception exception, WebRequest webRequest){
         return new ResponseEntity<>("Usage of selected vehicle type is forbidden", HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(InvalidCityNameException.class)
+    protected ResponseEntity<?> InvalidCityNameException(Exception exception, WebRequest webRequest){
+        return new ResponseEntity<>("The city input has to be either Tallinn, Tartu or Pärnu!", HttpStatus.NOT_FOUND);
+    }
 }
