@@ -20,27 +20,27 @@ import java.util.List;
 public class FeeServiceImpl implements FeeService {
 
     // Constants
-    private static final double TALLINNCARCOST = 4;
-    private static final double TALLINNSCOOTERCOST = 3.5;
-    private static final double TALLINNBIKECOST = 3;
-    private static final double TARTUCARCOST = 3.5;
-    private static final double TARTUSCOOTERCOST = 3;
-    private static final double TARTUBIKECOST = 2.5;
-    private static final double PARNUCARCOST = 3;
-    private static final double PARNUSCOOTERCOST = 2.5;
-    private static final double PARNUBIKECOST = 2;
-    private static final double VERYCOLDAIRTEMPERATURECOST = 1;
-    private static final double COLDAIRTEMPERATURECOST = 0.5;
-    private static final double HIGHWINDSPEEDCOST = 0.5;
-    private static final double SNOWORSLEETWEATHERCOST = 1;
-    private static final double RAINWEATHERCOST = 0.5;
+    private static final double TALLINN_CAR_COST = 4;
+    private static final double TALLINN_SCOOTER_COST = 3.5;
+    private static final double TALLINN_BIKE_COST = 3;
+    private static final double TARTU_CAR_COST = 3.5;
+    private static final double TARTU_SCOOTER_COST = 3;
+    private static final double TARTU_BIKE_COST = 2.5;
+    private static final double PARNU_CAR_COST = 3;
+    private static final double PARNU_SCOOTER_COST = 2.5;
+    private static final double PARNU_BIKE_COST = 2;
+    private static final double VERY_COLD_AIR_TEMPERATURE_COST = 1;
+    private static final double COLD_AIR_TEMPERATURE_COST = 0.5;
+    private static final double HIGH_WIND_SPEED_COST = 0.5;
+    private static final double SNOW_OR_SLEET_WEATHER_COST = 1;
+    private static final double RAIN_WEATHER_COST = 0.5;
     private static final String TALLINN = "Tallinn";
     private static final String PARNU = "Pärnu";
     private static final String TARTU = "Tartu";
-    private static final double VERYCOLDAIRTEMPERATURE = -10;
-    private static final double COLDAIRTEMPERATURE = 0;
-    private static final double HIGHWINDSPEEDMAX = 20;
-    private static final double HIGHWINDSPEEDMIN = 10;
+    private static final double VERY_COLD_AIR_TEMPERATURE = -10;
+    private static final double COLD_AIR_TEMPERATURE = 0;
+    private static final double HIGH_WIND_SPEED_MAX = 20;
+    private static final double HIGH_WIND_SPEED_MIN = 10;
     private static final double ISNULL = 0.0f;
 
     // Variables
@@ -50,14 +50,15 @@ public class FeeServiceImpl implements FeeService {
     @Override
     public Fee calculateCost(String city, String vehicle) {
         Fee fee = new Fee();
-        List<Weather> info = weatherRepository.findAllByName(renameCity(city));
+        String cityToSearch = renameCity(city);
+        List<Weather> info = weatherRepository.findAllByName(cityToSearch);
         info.sort(Comparator.comparing(Weather::getTime));
         calculateFees(city, vehicle, info, fee);
         return fee;
     }
 
     @Override
-    public String renameCity(String city) {
+    public String renameCity(String city) throws InvalidCityNameException {
         String cityToSearchBy = "";
         if (city.equals(TALLINN)) {
             cityToSearchBy = "Tallinn-Harku";
@@ -68,7 +69,7 @@ public class FeeServiceImpl implements FeeService {
         if (city.equals(PARNU)) {
             cityToSearchBy = PARNU;
         }
-        if (cityToSearchBy.equals("")) {
+        if (cityToSearchBy.isEmpty()) {
             throw new InvalidCityNameException();
         }
         return cityToSearchBy;
@@ -78,40 +79,40 @@ public class FeeServiceImpl implements FeeService {
     public void calculateFees(String city, String vehicle, List<Weather> info, Fee fee) {
         if (vehicle.equals("Car")) {
             if (city.equals(TALLINN)) {
-                fee.setRbf(TALLINNCARCOST);
+                fee.setRbf(TALLINN_CAR_COST);
             }
             if (city.equals(TARTU)) {
-                fee.setRbf(TARTUCARCOST);
+                fee.setRbf(TARTU_CAR_COST);
             }
             if (city.equals(PARNU)) {
-                fee.setRbf(PARNUCARCOST);
+                fee.setRbf(PARNU_CAR_COST);
             }
         }
         if (vehicle.equals("Scooter")) {
             calculateAtef(info, fee);
             calculateWpef(info, fee);
             if (city.equals(TALLINN)) {
-                fee.setRbf(TALLINNSCOOTERCOST);
+                fee.setRbf(TALLINN_SCOOTER_COST);
             }
             if (city.equals(TARTU)) {
-                fee.setRbf(TARTUSCOOTERCOST);
+                fee.setRbf(TARTU_SCOOTER_COST);
             }
             if (city.equals(PARNU)) {
-                fee.setRbf(PARNUSCOOTERCOST);
+                fee.setRbf(PARNU_SCOOTER_COST);
             }
         }
         if (vehicle.equals("Bike")) {
             calculateAtef(info, fee);
-            calculateWsef(info, fee);
+            calculateWsef(info, fee, vehicle);
             calculateWpef(info, fee);
             if (city.equals(TALLINN)) {
-                fee.setRbf(TALLINNBIKECOST);
+                fee.setRbf(TALLINN_BIKE_COST);
             }
             if (city.equals(TARTU)) {
-                fee.setRbf(TARTUBIKECOST);
+                fee.setRbf(TARTU_BIKE_COST);
             }
             if (city.equals(PARNU)) {
-                fee.setRbf(PARNUBIKECOST);
+                fee.setRbf(PARNU_BIKE_COST);
             }
         }
 
@@ -120,24 +121,24 @@ public class FeeServiceImpl implements FeeService {
     @Override
     public void calculateAtef(List<Weather> info, Fee fee) {
         float airTemp = info.get(0).getAirTemperature();
-        System.out.println(airTemp);
         if (airTemp != ISNULL) {
-            if (airTemp < VERYCOLDAIRTEMPERATURE) {
-                fee.setAtef(VERYCOLDAIRTEMPERATURECOST);
-            } else if (airTemp >= VERYCOLDAIRTEMPERATURE && airTemp <= COLDAIRTEMPERATURE) {
-                fee.setAtef(COLDAIRTEMPERATURECOST);
+            if (airTemp < VERY_COLD_AIR_TEMPERATURE) {
+                fee.setAtef(VERY_COLD_AIR_TEMPERATURE_COST);
+            } else if (airTemp < COLD_AIR_TEMPERATURE) {
+                fee.setAtef(COLD_AIR_TEMPERATURE_COST);
+            } else {
+                fee.setAtef(0);
             }
         }
     }
 
     @Override
-    public void calculateWsef(List<Weather> info, Fee fee) {
+    public void calculateWsef(List<Weather> info, Fee fee, String vehicle) {
         float windSpeed = info.get(0).getWindSpeed();
-        System.out.println(windSpeed);
         if (windSpeed != ISNULL) {
-            if (windSpeed >= HIGHWINDSPEEDMIN && windSpeed <= HIGHWINDSPEEDMAX) {
-                fee.setWsef(HIGHWINDSPEEDCOST);
-            } else if (windSpeed > HIGHWINDSPEEDMAX) {
+            if (windSpeed >= HIGH_WIND_SPEED_MIN && windSpeed <= HIGH_WIND_SPEED_MAX) {
+                fee.setWsef(HIGH_WIND_SPEED_COST);
+            } else if (windSpeed > HIGH_WIND_SPEED_MAX && vehicle.equals("Bike")) {
                 throw new VehicleIsForbiddenException();
             }
         }
@@ -145,16 +146,15 @@ public class FeeServiceImpl implements FeeService {
 
     @Override
     public void calculateWpef(List<Weather> info, Fee fee) {
-        List<String> listOfSnowAndSnowPhenomenons = new ArrayList<>(List.of("Light sleet", "Moderate sleet", "Light snowfall", "Moderate Snowfall",
+        List<String> listOfSnowAndFleetPhenomenons = new ArrayList<>(List.of("Light sleet", "Moderate sleet", "Light snowfall", "Moderate Snowfall",
                 "Heavy snowfall", "Blowing snow", "Drifting snow"));
         List<String> listOfRainPhenomenons = new ArrayList<>(List.of("Light shower", "Moderate shower", "Heavy shower", "Light rain", "Moderate rain", "Heavy rain"));
         List<String> listOfForbiddenPhenomenons = new ArrayList<>(List.of("Glaze", "Hail", "Thunder", "Thunderstorm"));
         String phenomenon = info.get(0).getPhenomenon();
-        System.out.println(phenomenon);
-        if (listOfSnowAndSnowPhenomenons.contains(phenomenon)) {
-            fee.setWpef(SNOWORSLEETWEATHERCOST);
+        if (listOfSnowAndFleetPhenomenons.contains(phenomenon)) {
+            fee.setWpef(SNOW_OR_SLEET_WEATHER_COST);
         } else if (listOfRainPhenomenons.contains(phenomenon)) {
-            fee.setWpef(RAINWEATHERCOST);
+            fee.setWpef(RAIN_WEATHER_COST);
         } else if (listOfForbiddenPhenomenons.contains(phenomenon)) {
             throw new VehicleIsForbiddenException();
         }

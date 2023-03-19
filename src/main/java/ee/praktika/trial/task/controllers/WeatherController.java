@@ -29,8 +29,6 @@ public class WeatherController {
 
     private final WeatherService weatherService;
 
-    WeatherAPIServiceImpl weatherAPIService;
-
 
     @GetMapping
     public ResponseEntity<List<Weather>> getWeather(@RequestParam(name = "city") String city,

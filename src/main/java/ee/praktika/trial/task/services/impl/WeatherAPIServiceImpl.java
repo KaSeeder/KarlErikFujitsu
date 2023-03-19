@@ -26,7 +26,7 @@ public class WeatherAPIServiceImpl {
 
     private final String LINK = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
 
-    @Scheduled(cron="0 50 * ? * *")
+    @Scheduled(cron="0 15 * ? * *")
     public void getObservations() throws JAXBException, MalformedURLException {
         JAXBContext context = JAXBContext.newInstance(Observations.class);
         Unmarshaller un = context.createUnmarshaller();
@@ -35,7 +35,5 @@ public class WeatherAPIServiceImpl {
             Weather weather = new Weather(observations.getStations().get(i), observations.getTime());
             weatherRepository.save(weather);
         }
-        System.out.println(new Date());
-        System.out.println(observations.getStations());
     }
 }

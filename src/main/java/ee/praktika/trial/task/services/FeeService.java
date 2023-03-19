@@ -12,7 +12,7 @@ public interface FeeService {
 
     public void calculateFees(String city, String vehicle, List<Weather> info, Fee fee);
     public void calculateAtef(List<Weather> info, Fee fee);
-    public void calculateWsef(List<Weather> info, Fee fee);
+    public void calculateWsef(List<Weather> info, Fee fee, String vehicle);
     public void calculateWpef(List<Weather> info, Fee fee);
 
 
