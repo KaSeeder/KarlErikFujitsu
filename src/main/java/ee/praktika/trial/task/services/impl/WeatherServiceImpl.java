@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Weather service implements, uses the Weather service interface.
+ */
 @AllArgsConstructor
 @Service
 public class WeatherServiceImpl implements WeatherService {

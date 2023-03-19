@@ -4,6 +4,9 @@ import ee.praktika.trial.task.models.Weather;
 
 import java.util.List;
 
+/**
+ * Weather Service interface
+ */
 public interface WeatherService {
 
     public List<Weather> readWeather(String city, String vehicle);

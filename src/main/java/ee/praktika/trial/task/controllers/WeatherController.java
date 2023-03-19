@@ -29,7 +29,11 @@ public class WeatherController {
 
     private final WeatherService weatherService;
 
-
+    /**
+     * @param city to get the information from
+     * @param vehicle to calculate additional fees
+     * @return List of weather objects
+     */
     @GetMapping
     public ResponseEntity<List<Weather>> getWeather(@RequestParam(name = "city") String city,
                                                     @RequestParam(name = "vehicle") String vehicle) {
@@ -38,6 +42,10 @@ public class WeatherController {
                 HttpStatus.OK);
     }
 
+    /**
+     * @param id of the weather object to be searched for
+     * @return the specified weather object
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Weather> getSpecificWeather(@PathVariable Long id) {
         return new ResponseEntity<>(
@@ -45,6 +53,11 @@ public class WeatherController {
                 HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param weather to be posted into the weather service
+     * @return if the weather was posted into the weather service
+     */
     @PostMapping
     public ResponseEntity<Weather> postWeather (@RequestBody Weather weather) {
         return new ResponseEntity<>(
@@ -52,6 +65,11 @@ public class WeatherController {
                 HttpStatus.CREATED);
     }
 
+    /**
+     *
+     * @param id of the weather object to be deleted.
+     * @return void
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteHello(@PathVariable Long id) {
         weatherService.deleteWeather(id);
@@ -59,6 +77,12 @@ public class WeatherController {
                 HttpStatus.NO_CONTENT);
     }
 
+    /**
+     *
+     * @param weather object to update with
+     * @param id of the weather to be changed
+     * @return void
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateHello(@RequestBody Weather weather, @PathVariable Long id) {
         weatherService.updateWeather(id, weather);

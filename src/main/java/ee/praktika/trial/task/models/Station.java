@@ -5,6 +5,9 @@ import lombok.Data;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
+/**
+ * Station object, which takes information from the XML file.
+ */
 @Data
 @XmlRootElement(name = "station")
 public class Station {

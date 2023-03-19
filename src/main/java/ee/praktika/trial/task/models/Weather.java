@@ -12,6 +12,16 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * Weather Object, which takes:
+ * ID: to look up specific weather
+ * Name: Name of the station the weather is taken from
+ * WMOCode: of the station
+ * Phenomenon: Weather phenomenon
+ * Air temperature: Air temperature
+ * Wind speed: Wind speed
+ * Time: time the weather data was taken
+ */
 @Entity
 @Data
 @Table(name="weather")

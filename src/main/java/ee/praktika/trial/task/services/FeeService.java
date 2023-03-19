@@ -5,6 +5,9 @@ import ee.praktika.trial.task.models.Weather;
 
 import java.util.List;
 
+/**
+ * Fee service interface
+ */
 public interface FeeService {
 
     public Fee calculateCost(String city, String vehicle);

@@ -20,10 +20,14 @@ public class FeeController {
 
     private final FeeService feeService;
 
-
+    /**
+     * @param city to make the delivery in
+     * @param vehicle to make the delivery with
+     * @return a calculated fee based on the parameters.
+     */
     @GetMapping
     public ResponseEntity<Fee> getFee(@RequestParam(name = "city") String city,
-                                      @RequestParam(name = "vehicle") String vehicle) throws MalformedURLException, JAXBException {
+                                      @RequestParam(name = "vehicle") String vehicle) {
         return new ResponseEntity<>(
                 feeService.calculateCost(city, vehicle),
                 HttpStatus.OK);

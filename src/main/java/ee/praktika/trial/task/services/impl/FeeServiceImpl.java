@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-
+/**
+ * Fee service implements Fee Service
+ */
 @Service
 @AllArgsConstructor
 public class FeeServiceImpl implements FeeService {
@@ -163,7 +165,6 @@ public class FeeServiceImpl implements FeeService {
                 fee.setRbf(PARNU_BIKE_COST);
             }
         }
-
     }
 
     /**

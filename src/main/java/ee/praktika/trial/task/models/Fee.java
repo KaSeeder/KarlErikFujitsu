@@ -4,6 +4,14 @@ package ee.praktika.trial.task.models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Fee object, which holds the:
+ * rbf - regional base fee
+ * atef - air temperature fee
+ * wsef - wind speed fee
+ * wpef - weather phenomenon fee
+ * totalCost - total cost of all the fees
+ */
 @Data
 @NoArgsConstructor
 public class Fee {
@@ -23,6 +31,10 @@ public class Fee {
         return totalCost;
     }
 
+    /**
+     *
+     * @return the totalCost of the fee
+     */
     @Override
     public String toString() {
         return getTotalCost()+"€";

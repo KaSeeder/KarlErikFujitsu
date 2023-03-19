@@ -16,7 +16,7 @@ import java.util.Date;
 
 
 /**
- * New and updated version of Impl.
+ * Weather API service implements Weather Service
  */
 @Service
 @AllArgsConstructor

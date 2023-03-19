@@ -6,6 +6,9 @@ import javax.xml.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Observation Object, which takes information from the XML file.
+ */
 @Data
 @XmlRootElement(name = "observations")
 @XmlAccessorType(XmlAccessType.FIELD)
