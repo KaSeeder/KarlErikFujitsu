@@ -47,6 +47,13 @@ public class FeeServiceImpl implements FeeService {
     private final WeatherRepository weatherRepository;
 
 
+    /**
+     * Method searches for weather data for that specific city, and takes the most recent weather data.
+     * and calculates all the additional fees based on the weather data.
+     * @param city to get delivery from.
+     * @param vehicle to get delivery with.
+     * @return The total fee for the delivery.
+     */
     @Override
     public Fee calculateCost(String city, String vehicle) {
         Fee fee = new Fee();
@@ -57,6 +64,11 @@ public class FeeServiceImpl implements FeeService {
         return fee;
     }
 
+    /**
+     * @param city name of the city to get the delivery from.
+     * @return name of the station where to get the data from.
+     * @throws InvalidCityNameException if the city is not Pärnu, Tartu or Tallinn.
+     */
     @Override
     public String renameCity(String city) throws InvalidCityNameException {
         String cityToSearchBy = "";
@@ -75,6 +87,42 @@ public class FeeServiceImpl implements FeeService {
         return cityToSearchBy;
     }
 
+    /**
+     * Method checks for the according vehicle, if its Car Scooter or Bike
+     * Afterwards the method checks which city the delivery is made in and calculates the:
+     *
+     *     Regional base fee - Set in stone price for vehicle and city
+     * • In case City = Tallinn and:
+     * Vehicle type = Car, then RBF = 4
+     * Vehicle type = Scooter, then RBF = 3,5
+     * Vehicle type = Bike, then RBF = 3
+     * • In case City = Tartu and:
+     * Vehicle type = Car, then RBF = 3,5
+     * Vehicle type = Scooter, then RBF = 3
+     * Vehicle type = Bike, then RBF = 2,5
+     * • In case City = Pärnu and:
+     * Vehicle type = Car, then RBF = 3
+     * Vehicle type = Scooter, then RBF = 2,5
+     * Vehicle type = Bike, then RBF = 2
+     *
+     *     ATEF - Fee based on air temperature for Scooter and Bike vehicle types
+     * Air temperature is less than -10 C, then ATEF = 1
+     * Air temperature is between -10 C and 0 C, then ATEF = 0,5
+     *
+     *     WSEF - Fee based on wind speed for Bike
+     * Wind speed is between 10 and 20 , then WSEF = 0,5
+     * In case of wind speed is greater than 20, then throw VehicleIsForbiddenException
+     *
+     *     WPEF - Fee based on weather phenomenon for Scooter and Bike vehicle types
+     * Weather phenomenon is related to snow or sleet, then WPEF = 1
+     * Weather phenomenon is related to rain, then WPEF = 0,5
+     * In case the weather phenomenon is glaze, hail, or thunder, then throw VehicleIsForbiddenException
+     *
+     * @param city to make delivery in
+     * @param vehicle to make delivery with
+     * @param info latest weather data to work with and calculate all the fees
+     * @param fee total fee of delivery
+     */
     @Override
     public void calculateFees(String city, String vehicle, List<Weather> info, Fee fee) {
         if (vehicle.equals("Car")) {
@@ -118,6 +166,14 @@ public class FeeServiceImpl implements FeeService {
 
     }
 
+    /**
+     * ATEF - Fee based on air temperature for Scooter and Bike vehicle types
+     * Air temperature is less than -10 C, then ATEF = 1
+     * Air temperature is between -10 C and 0 C, then ATEF = 0,5
+     *
+     * @param info weather info
+     * @param fee to raise ATEF price if the conditions are met
+     */
     @Override
     public void calculateAtef(List<Weather> info, Fee fee) {
         float airTemp = info.get(0).getAirTemperature();
@@ -132,6 +188,16 @@ public class FeeServiceImpl implements FeeService {
         }
     }
 
+    /**
+     * WSEF - Fee based on wind speed for Bike
+     * Wind speed is between 10 and 20 , then WSEF = 0,5
+     * In case of wind speed is greater than 20, then throw VehicleIsForbiddenException
+     *
+     *
+     * @param info weather info
+     * @param fee to raise WSEF price if the conditions are met
+     * @param vehicle to check if its too windy to ride with a bike.
+     */
     @Override
     public void calculateWsef(List<Weather> info, Fee fee, String vehicle) {
         float windSpeed = info.get(0).getWindSpeed();
@@ -144,6 +210,14 @@ public class FeeServiceImpl implements FeeService {
         }
     }
 
+    /**
+     * WPEF - Fee based on weather phenomenon for Scooter and Bike vehicle types
+     * Weather phenomenon is related to snow or sleet, then WPEF = 1
+     * Weather phenomenon is related to rain, then WPEF = 0,5
+     * In case the weather phenomenon is glaze, hail, or thunder, then throw VehicleIsForbiddenException
+     * @param info weather info
+     * @param fee to raise WPEF price if the conditions are met.
+     */
     @Override
     public void calculateWpef(List<Weather> info, Fee fee) {
         List<String> listOfSnowAndFleetPhenomenons = new ArrayList<>(List.of("Light sleet", "Moderate sleet", "Light snowfall", "Moderate Snowfall",

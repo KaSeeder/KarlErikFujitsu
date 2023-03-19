@@ -15,6 +15,9 @@ public class WeatherServiceImpl implements WeatherService {
 
     private final WeatherRepository weatherRepository;
 
+    /**
+     * @return All Weather objects that are saved into the weatherRepository.
+     */
     @Override
     public List<Weather> readWeather(String city, String vehicle) {
         return weatherRepository.findAll();

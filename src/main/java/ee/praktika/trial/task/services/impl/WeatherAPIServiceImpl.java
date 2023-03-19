@@ -26,6 +26,13 @@ public class WeatherAPIServiceImpl {
 
     private final String LINK = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
 
+    /**
+     * Using CronJob, 15 minutes after a full hour it requests the Estonian Environment Agency
+     * for information about the weather.
+     * The method converts it from an XML file and makes the data into Observation Objects.
+     * The Observation objects are looped through and made into Weather Objects, which are saved into the
+     * weatherRepository.
+     */
     @Scheduled(cron="0 15 * ? * *")
     public void getObservations() throws JAXBException, MalformedURLException {
         JAXBContext context = JAXBContext.newInstance(Observations.class);
