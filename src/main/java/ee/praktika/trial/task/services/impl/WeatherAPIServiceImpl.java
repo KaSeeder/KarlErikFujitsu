@@ -1,41 +1,46 @@
 package ee.praktika.trial.task.services.impl;
 
 import ee.praktika.trial.task.models.Observations;
+import ee.praktika.trial.task.models.Weather;
+import ee.praktika.trial.task.repository.WeatherRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriBuilderFactory;
-
-import java.util.Collections;
-import java.util.List;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
 
 
 /**
- * New and updated version of Impl.
+ * Weather API service implements Weather Service
  */
+@Service
+@AllArgsConstructor
 public class WeatherAPIServiceImpl {
 
-    private static final String link = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
-    private static final RestTemplate restTemplate = new RestTemplate();
+    private final WeatherRepository weatherRepository;
 
-    static {
-        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
-        builder.xml();
-        restTemplate.setMessageConverters(Collections.singletonList(new MappingJackson2HttpMessageConverter(builder.build())));
+    private final String LINK = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
 
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory());
-//        List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
-//        messageConverters.add(new Jaxb2RootElementHttpMessageConverter());
-//        restTemplate.setMessageConverters(messageConverters);
-    }
-
-    public static Observations getObservations() {
-        Observations response = restTemplate.getForObject(link, Observations.class);
-        System.out.println(response.getStations());
-        return null;
+    /**
+     * Using CronJob, 15 minutes after a full hour it requests the Estonian Environment Agency
+     * for information about the weather.
+     * The method converts it from an XML file and makes the data into Observation Objects.
+     * The Observation objects are looped through and made into Weather Objects, which are saved into the
+     * weatherRepository.
+     */
+    @Scheduled(cron="0 15 * ? * *")
+    public void getObservations() throws JAXBException, MalformedURLException {
+        JAXBContext context = JAXBContext.newInstance(Observations.class);
+        Unmarshaller un = context.createUnmarshaller();
+        Observations observations = (Observations) un.unmarshal(new URL(LINK));
+        for (int i = 0; i < observations.getStations().size(); i++) {
+            Weather weather = new Weather(observations.getStations().get(i), observations.getTime());
+            weatherRepository.save(weather);
+        }
     }
 }

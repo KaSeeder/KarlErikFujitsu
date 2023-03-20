@@ -1,8 +1,8 @@
 package ee.praktika.trial.task.exceptions;
 
-import lombok.AllArgsConstructor;
 
+/**
+ * Exception which is thrown when the entity being searched for is null or not found.
+ */
 public class EntityNotFoundException extends RuntimeException {
-
-
 }

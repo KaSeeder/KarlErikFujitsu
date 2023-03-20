@@ -9,18 +9,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Weather service implements, uses the Weather service interface.
+ */
 @AllArgsConstructor
 @Service
 public class WeatherServiceImpl implements WeatherService {
 
     private final WeatherRepository weatherRepository;
 
+    /**
+     * @return All Weather objects that are saved into the weatherRepository.
+     */
     @Override
     public List<Weather> readWeather(String city, String vehicle) {
-        if (city != null && vehicle != null) {
-            //TODO: make 3 vehicle types CAR SCOOTER BIKE
-            return weatherRepository.findAllByName(city);
-        }
         return weatherRepository.findAll();
     }
 

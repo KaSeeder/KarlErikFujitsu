@@ -1,24 +1,21 @@
 package ee.praktika.trial.task.models;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Observation Object, which takes information from the XML file.
+ */
 @Data
-@RequiredArgsConstructor
 @XmlRootElement(name = "observations")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Observations {
 
-    @XmlAttribute
-    private Date timestamp;
+    @XmlAttribute(name="timestamp")
+    private Date time;
 
     @XmlElement(name = "station")
     private List<Station> stations;
